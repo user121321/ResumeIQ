@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resume Analyzer</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="icon" type="image/png" href="/static/favicon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-icon">◈</span>
+        <span class="logo-text">ResumeIQ</span>
+      </div>
+      <p class="header-tagline">AI-powered resume intelligence</p>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-inner">
+      <h1 class="hero-title">
+        Decode your<br /><em>resume's potential</em>
+      </h1>
+      <p class="hero-sub">Upload your resume and paste a job description. Our AI will evaluate your fit, identify gaps, and give you actionable recommendations — in seconds.</p>
+    </div>
+    <div class="hero-line"></div>
+  </section>
+
+  <!-- Upload Form -->
+  <main class="main-content">
+    <form id="analyzeForm" class="upload-form" enctype="multipart/form-data">
+
+      <div class="form-grid">
+        <!-- PDF Upload -->
+        <div class="form-group">
+          <label class="field-label">
+            <span class="label-number">01</span>
+            Resume (PDF)
+          </label>
+          <div class="drop-zone" id="dropZone">
+            <div class="drop-icon">⬆</div>
+            <p class="drop-text">Drop your PDF here or <span class="drop-link">browse</span></p>
+            <p class="drop-hint">Max 10 MB · PDF only</p>
+            <input type="file" id="resumeInput" name="resume" accept=".pdf" required hidden />
+          </div>
+          <div class="file-name" id="fileName">No file selected</div>
+        </div>
+
+        <!-- Job Description -->
+        <div class="form-group">
+          <label class="field-label" for="jobDesc">
+            <span class="label-number">02</span>
+            Job Description
+          </label>
+          <textarea
+            id="jobDesc"
+            name="job_description"
+            class="jd-textarea"
+            placeholder="Paste the full job description here — including required skills, responsibilities, and qualifications…"
+            required
+          ></textarea>
+        </div>
+      </div>
+
+      <button type="submit" class="analyze-btn" id="analyzeBtn">
+        <span class="btn-text">Analyze Resume</span>
+        <span class="btn-arrow">→</span>
+      </button>
+
+    </form>
+
+    <!-- Loading State -->
+    <div class="loading-state" id="loadingState">
+      <div class="loading-spinner"></div>
+      <p class="loading-text">Analyzing your resume<span class="ellipsis"></span></p>
+    </div>
+
+    <!-- Error Banner -->
+    <div class="error-banner" id="errorBanner">
+      <span class="error-icon">✕</span>
+      <span class="error-message" id="errorMessage"></span>
+    </div>
+
+    <!-- Results Section -->
+    <section class="results-section" id="resultsSection">
+
+      <!-- Score + Verdict -->
+      <div class="results-header">
+        <div class="score-block">
+          <div class="score-ring-wrap">
+            <svg class="score-ring" viewBox="0 0 120 120">
+              <circle class="ring-bg" cx="60" cy="60" r="52" />
+              <circle class="ring-fill" id="ringFill" cx="60" cy="60" r="52"
+                stroke-dasharray="326.7"
+                stroke-dashoffset="326.7" />
+            </svg>
+            <div class="score-center">
+              <span class="score-number" id="scoreNumber">0</span>
+              <span class="score-label">/ 100</span>
+            </div>
+          </div>
+          <p class="score-caption">Match Score</p>
+        </div>
+        <div class="verdict-block">
+          <div class="verdict-badge" id="verdictBadge">—</div>
+          <p class="verdict-summary" id="verdictSummary"></p>
+        </div>
+      </div>
+
+      <!-- Grid of Cards -->
+      <div class="cards-grid">
+
+        <div class="result-card card-strengths">
+          <h3 class="card-title"><span class="card-icon">✦</span> Strengths</h3>
+          <ul class="card-list" id="strengthsList"></ul>
+        </div>
+
+        <div class="result-card card-gaps">
+          <h3 class="card-title"><span class="card-icon">△</span> Gaps</h3>
+          <ul class="card-list" id="gapsList"></ul>
+        </div>
+
+        <div class="result-card card-skills">
+          <h3 class="card-title"><span class="card-icon">◉</span> Skills Matched</h3>
+          <div class="tags-wrap" id="skillsMatched"></div>
+        </div>
+
+        <div class="result-card card-missing">
+          <h3 class="card-title"><span class="card-icon">◎</span> Skills Missing</h3>
+          <div class="tags-wrap" id="skillsMissing"></div>
+        </div>
+
+        <div class="result-card card-experience">
+          <h3 class="card-title"><span class="card-icon">◈</span> Experience</h3>
+          <p class="card-body" id="experienceText"></p>
+        </div>
+
+        <div class="result-card card-education">
+          <h3 class="card-title"><span class="card-icon">◇</span> Education</h3>
+          <p class="card-body" id="educationText"></p>
+        </div>
+
+        <div class="result-card card-ats full-width">
+          <h3 class="card-title"><span class="card-icon">⌖</span> ATS Keywords</h3>
+          <div class="ats-grid">
+            <div>
+              <p class="ats-sublabel">Found in Resume</p>
+              <div class="tags-wrap" id="atsFound"></div>
+            </div>
+            <div>
+              <p class="ats-sublabel missing">Missing from Resume</p>
+              <div class="tags-wrap" id="atsMissing"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="result-card card-recommendations full-width">
+          <h3 class="card-title"><span class="card-icon">→</span> Recommendations</h3>
+          <ol class="rec-list" id="recList"></ol>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>Built with FastAPI · Claude AI · PyMuPDF</p>
+  </footer>
+
+  <script src="/static/script.js?v=2"></script>
+</body>
+</html>
