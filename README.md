@@ -51,3 +51,6 @@ An AI-powered resume analyzer built with FastAPI, Groq (LLaMA 3), and PyMuPDF.
 
 ## Get a Free Groq API Key
 Visit https://console.groq.com to get a free API key.
+
+## Check demo of the website
+https://resumeiq-3.onrender.com
