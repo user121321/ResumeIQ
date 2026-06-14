@@ -16,16 +16,10 @@ client = Groq(api_key=GROQ_API_KEY)
 
 
 async def analyze_resume(resume_text: str, job_description: str) -> dict:
-    """
-    Send resume + job description to Groq and return a structured analysis.
 
-    Args:
-        resume_text: Cleaned plain-text content of the resume.
-        job_description: The target job description provided by the user.
 
-    Returns:
-        A dictionary with structured analysis fields.
-    """
+
+    
     prompt = PROMPT_TEMPLATE.replace("{{RESUME}}", resume_text).replace(
         "{{JOB_DESCRIPTION}}", job_description
     )
@@ -47,6 +41,7 @@ async def analyze_resume(resume_text: str, job_description: str) -> dict:
             temperature=0.3,
         )
 
+        
         raw_response = chat_completion.choices[0].message.content
         return _parse_llm_response(raw_response)
 
@@ -56,15 +51,8 @@ async def analyze_resume(resume_text: str, job_description: str) -> dict:
 
 
 def _parse_llm_response(raw: str) -> dict:
-    """
-    Extract JSON from the LLM response. Handles markdown code blocks.
 
-    Args:
-        raw: Raw string response from LLM.
-
-    Returns:
-        Parsed dictionary, or error dict if parsing fails.
-    """
+    
     # Strip markdown code fences if present
     cleaned = re.sub(r"```(?:json)?", "", raw).strip().rstrip("`").strip()
 
