@@ -2,21 +2,7 @@ import re
 
 
 def clean_text(text: str) -> str:
-    """
-    Clean and normalise raw text extracted from a PDF resume.
-
-    Steps:
-    1. Normalise line endings.
-    2. Remove null bytes and non-printable control characters.
-    3. Collapse excessive whitespace/blank lines.
-    4. Strip leading/trailing whitespace.
-
-    Args:
-        text: Raw text extracted from the PDF.
-
-    Returns:
-        Cleaned text ready to be sent to the LLM.
-    """
+    
     if not text:
         return ""
 
