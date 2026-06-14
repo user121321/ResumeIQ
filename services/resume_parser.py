@@ -4,15 +4,8 @@ import io
 
 
 def extract_text_from_pdf(pdf_source: io.BytesIO) -> Optional[str]:
-    """
-    Extract plain text from a PDF file.
 
-    Args:
-        pdf_source: A BytesIO object containing PDF binary data.
-
-    Returns:
-        Extracted text as a string, or None if extraction fails.
-    """
+    
     try:
         pdf_bytes = pdf_source.read()
         doc = fitz.open(stream=pdf_bytes, filetype="pdf")
